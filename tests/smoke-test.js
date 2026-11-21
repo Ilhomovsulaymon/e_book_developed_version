@@ -1,0 +1,41 @@
+const fs=require('fs'),vm=require('vm'),path=require('path');
+class El{constructor(id=''){this.id=id;this.innerHTML='';this.value='';this.checked=false;this.dataset={};this.listeners={};this.classList={add(){},remove(){},toggle(){},contains(){return false}};this.style={};this.children=[];this.hidden=false;this.files=[];this.textContent='';}addEventListener(t,fn){(this.listeners[t]??=[]).push(fn)}append(x){this.children.push(x)}remove(){}focus(){}closest(){return this}click(){}setAttribute(){}requestFullscreen(){return Promise.resolve()}}
+const els={};const doc={body:new El('body'),querySelector(sel){return els[sel]??(els[sel]=new El(sel))},querySelectorAll(){return []},createElement(t){return new El(t)}};
+const local={};const storage={getItem(k){return local[k]??null},setItem(k,v){local[k]=v},removeItem(k){delete local[k]}};
+let hash='';const location={get hash(){return hash},set hash(v){hash=v.startsWith('#')?v:'#'+v},origin:'http://test',pathname:'/index.html'};
+class FD{constructor(f){this.f=f}get(k){return this.f.values?.[k]??''}}
+const context={document:doc,window:{addEventListener(){},readerBook:null},location,localStorage:storage,navigator:{clipboard:{writeText:()=>Promise.resolve()}},console,URL,URLSearchParams,Blob,FormData:FD,setTimeout:()=>0,confirm:()=>true,prompt:()=>null};context.window.document=doc;vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'../src/js/app.js'),'utf8')+'\nglobalThis.__state=state;globalThis.__allBooks=allBooks;',context);
+const app=els['#appContent'];const tests=[];const test=(name,ok)=>tests.push([name,!!ok]);
+const dispatch=(type,target)=>{const e={target,preventDefault(){},stopPropagation(){}};(app.listeners[type]||[]).forEach(fn=>fn(e))};
+test('home initial render',app.innerHTML.includes('Tanlangan kitoblar')&&app.innerHTML.includes('Bilim olamiga'));
+context.navigate('books');test('catalog route renders',app.innerHTML.includes('Kitoblar olami')&&app.innerHTML.includes('catalogGrid'));
+test('seed includes at least 30 books',context.__allBooks().length>=30);
+test('catalog has combined filter controls',app.innerHTML.includes('catalogAuthor')&&app.innerHTML.includes('catalogYear')&&app.innerHTML.includes('catalogType'));
+context.openBook('b1');test('book details render',app.innerHTML.includes('O‘tkan kunlar')&&app.innerHTML.includes('O‘qishni boshlash'));
+context.startReader('b1');test('reader sample, controls render',app.innerHTML.includes('Demo matn')&&app.innerHTML.includes('readerNext')&&app.innerHTML.includes('readerFinish'));
+context.setLibrary('b2','later');test('library status saved to local storage',context.__state.library.b2.status==='later'&&JSON.parse(local['readora-v1']).library.b2.status==='later');
+const favTarget=new El();favTarget.dataset.favorite='b3';dispatch('click',favTarget);test('favorite click interaction',context.__state.favorites.includes('b3'));
+const cycleTarget=new El();cycleTarget.dataset.cycleStatus='b4';dispatch('click',cycleTarget);test('status cycle interaction',context.__state.library.b4.status==='later');
+context.navigate('categories');test('categories route',app.innerHTML.includes('Kategoriyalar'));
+context.navigate('authors');test('authors route',app.innerHTML.includes('Mualliflar'));
+context.navigate('settings');test('settings/profile forms',app.innerHTML.includes('Sozlamalar')&&app.innerHTML.includes('profileForm'));
+context.navigate('notifications');test('notifications route',app.innerHTML.includes('Bildirishnomalar'));
+context.navigate('admin');test('admin access demo gate shown',app.innerHTML.includes('Demo admin'));
+const adminTarget=new El();adminTarget.id='adminLogin';dispatch('click',adminTarget);test('admin demo gate action',context.__state.admin===true&&app.innerHTML.includes('Kitob qo‘shish'));
+const form=new El();form.id='addBookForm';form.values={title:'Test Kitob',author:'Test Author',category:'Ta’lim',year:'2025',pages:'120',description:'Test description'};dispatch('submit',form);test('admin adds custom book',context.__allBooks().some(b=>b.title==='Test Kitob'));
+context.openBook('b1');const reviewForm=new El();reviewForm.id='reviewForm';reviewForm.dataset.reviewBook='b1';reviewForm.values={rating:'5',comment:'Test sharh'};dispatch('submit',reviewForm);test('review submission stored',context.__state.reviews.b1?.some(r=>r.comment==='Test sharh'));
+context.navigate('profile');test('profile route/statistics',app.innerHTML.includes('Profil')&&app.innerHTML.includes('O‘qish progressi'));
+context.navigate('auth');test('demo authentication form renders',app.innerHTML.includes('authForm')&&app.innerHTML.includes('Demo autentifikatsiya'));
+context.navigate('history');test('reading history route',app.innerHTML.includes('O‘qish tarixi'));
+context.navigate('favorites');test('favorites route',app.innerHTML.includes('Sevimlilar'));
+
+context.startReader('b5');const nextTarget=new El();nextTarget.id='readerNext';dispatch('click',nextTarget);test('reader next page saves progress',context.__state.library.b5.page===2);
+const finishTarget=new El();finishTarget.id='readerFinish';dispatch('click',finishTarget);test('reader finish marks book read',context.__state.library.b5.status==='read');
+context.navigate('notifications');const markTarget=new El();markTarget.id='markAllRead';dispatch('click',markTarget);test('notifications mark all read',context.__state.notifications.every(n=>n.read));
+context.navigate('settings');const profileForm=new El();profileForm.id='profileForm';profileForm.values={name:'Test User',email:'test@example.com',bio:'Test bio'};dispatch('submit',profileForm);test('profile form saves',context.__state.profile.name==='Test User'&&context.__state.profile.email==='test@example.com');
+context.navigate('auth');const authForm=new El();authForm.id='authForm';authForm.values={name:'Demo User',email:'demo@example.com',password:'pass123',register:'on'};dispatch('submit',authForm);test('demo authentication form submit',context.__state.authenticated&&context.__state.profile.email==='demo@example.com');
+context.openBook('b1');const editTarget=new El();editTarget.dataset.editReview='b1:0';context.prompt=()=> 'Updated review';dispatch('click',editTarget);test('review edit interaction',context.__state.reviews.b1?.[0]?.comment==='Updated review');
+const delTarget=new El();delTarget.dataset.deleteReview='b1:0';dispatch('click',delTarget);test('review delete interaction',context.__state.reviews.b1?.length===0);
+context.navigate('settings');const themeChange={target:{id:'settingsTheme',checked:true}};(app.listeners.change||[]).forEach(fn=>fn(themeChange));test('settings dark-mode persistence',context.__state.theme==='dark'&&JSON.parse(local['readora-v1']).theme==='dark');
+context.navigate('books');const searchBox=els['#catalogSearch'];searchBox.value='Sherlok';context.updateCatalog();test('catalog search filters matching content',els['#catalogGrid'].innerHTML.includes('Sherlok')&&els['#catalogCount'].textContent==='1 ta kitob topildi');
+console.log(tests.map(([n,p])=>`${p?'PASS':'FAIL'} ${n}`).join('\n'));console.log('TESTS',tests.filter(x=>x[1]).length,'/',tests.length);if(tests.some(x=>!x[1]))process.exitCode=1;

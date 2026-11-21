@@ -1,0 +1,12 @@
+{
+  "name": "Readora — Elektron kutubxona",
+  "short_name": "Readora",
+  "description": "Kitoblarni kashf etish, o'qish va shaxsiy kutubxonani boshqarish.",
+  "lang": "uz",
+  "start_url": "./index.html#home",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f5fa",
+  "theme_color": "#6657d9",
+  "icons": [{"src":"src/assets/readora-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

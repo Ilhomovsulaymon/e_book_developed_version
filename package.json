@@ -1,0 +1,10 @@
+{
+  "name": "readora-demo-library",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Readora Uzbek e-library demo MVP",
+  "scripts": {
+    "check": "node --check src/js/app.js && node --check sw.js",
+    "test": "node tests/smoke-test.js"
+  }
+}

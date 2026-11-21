@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#6657d9">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="src/assets/readora-icon.svg" type="image/svg+xml">
+  <meta name="description" content="Readora — kitoblarni kashf etish, o'qish va shaxsiy kutubxonangizni boshqarish platformasi.">
+  <title>Readora — Elektron kutubxona</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Asosiy navigatsiya">
+      <a class="brand" href="#home" aria-label="Readora bosh sahifa"><span class="brand-mark">R</span><span>readora</span></a>
+      <div class="sidebar-label">ASOSIY</div>
+      <nav class="nav-list">
+        <a class="nav-link active" href="#home" data-route="home"><span class="nav-icon">⌂</span> Bosh sahifa</a>
+        <a class="nav-link" href="#books" data-route="books"><span class="nav-icon">▤</span> Kitoblar</a>
+        <a class="nav-link" href="#categories" data-route="categories"><span class="nav-icon">▦</span> Kategoriyalar</a>
+        <a class="nav-link" href="#authors" data-route="authors"><span class="nav-icon">♙</span> Mualliflar</a>
+      </nav>
+      <div class="sidebar-label sidebar-label-spaced">MENING</div>
+      <nav class="nav-list">
+        <a class="nav-link" href="#library" data-route="library"><span class="nav-icon">▣</span> Kutubxonam</a>
+        <a class="nav-link" href="#favorites" data-route="favorites"><span class="nav-icon">♡</span> Sevimlilar</a>
+        <a class="nav-link" href="#history" data-route="history"><span class="nav-icon">◷</span> O'qish tarixi</a>
+        <a class="nav-link" href="#profile" data-route="profile"><span class="nav-icon">♙</span> Profil</a>
+        <a class="nav-link" href="#notifications" data-route="notifications"><span class="nav-icon">♧</span> Bildirishnomalar</a>
+        <a class="nav-link" href="#admin" data-route="admin"><span class="nav-icon">▣</span> Admin panel</a>
+        <a class="nav-link" href="#auth" data-route="auth"><span class="nav-icon">↪</span> Demo hisob</a>
+      </nav>
+      <div class="sidebar-bottom"><div class="demo-card"><span class="demo-dot"></span><strong>Demo rejim</strong><p>Ma'lumotlar ushbu qurilmada saqlanadi.</p></div><button class="nav-link settings-link" data-route="settings"><span class="nav-icon">⚙</span> Sozlamalar</button></div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menuToggle" aria-label="Menyuni ochish">☰</button>
+        <div class="breadcrumb"><span>Readora</span><span class="breadcrumb-sep">/</span><strong id="currentPageLabel">Bosh sahifa</strong></div>
+        <datalist id="bookSearchSuggestions"></datalist><div class="topbar-actions">
+          <label class="search-box" for="globalSearch"><span aria-hidden="true">⌕</span><input id="globalSearch" type="search" list="bookSearchSuggestions" placeholder="Kitob yoki muallifni qidiring..." autocomplete="off"><kbd>⌘ K</kbd></label>
+          <button class="icon-button" id="themeToggle" aria-label="Rang mavzusini almashtirish" title="Light / dark">◐</button>
+          <button class="icon-button notification-button" id="notificationButton" aria-label="Bildirishnomalar">♧<span class="notification-dot"></span></button>
+          <button class="profile-button" id="profileButton" aria-label="Profil"><span class="avatar">R</span><span class="profile-name">Reader</span><span>⌄</span></button>
+        </div>
+      </header>
+      <section class="content" id="appContent" tabindex="-1">
+        <div class="welcome-panel"><div class="welcome-eyebrow"><span class="eyebrow-dot"></span> READORA DIGITAL LIBRARY</div><h1>Kitoblar bilan <span>yangi olam</span> kashf et.</h1><p>O'zingizga yoqqan kitoblarni toping, mutolaa qiling va bilim safaringizni davom ettiring.</p><div class="welcome-actions"><button class="primary-button" data-route="books">Kitoblarni ko'rish <span>→</span></button><button class="secondary-button" data-route="library">Kutubxonam</button></div><div class="welcome-art" aria-hidden="true"><div class="art-orb orb-one"></div><div class="art-orb orb-two"></div><div class="book-stack"><div class="book book-a"></div><div class="book book-b"></div><div class="book book-c"></div><div class="book book-d"></div></div></div></div>
+        <div class="stats-row"><article class="stat-card"><span class="stat-icon purple">▤</span><div><span class="stat-caption">Katalogdagi kitoblar</span><strong id="statBooks">—</strong></div></article><article class="stat-card"><span class="stat-icon blue">♙</span><div><span class="stat-caption">Mualliflar</span><strong id="statAuthors">—</strong></div></article><article class="stat-card"><span class="stat-icon peach">◷</span><div><span class="stat-caption">O'qish vaqtingiz</span><strong>0 <small>soat</small></strong></div></article><article class="stat-card"><span class="stat-icon green">♡</span><div><span class="stat-caption">Sevimli kitoblar</span><strong>0</strong></div></article></div>
+        <div class="section-heading"><div><span class="section-kicker">BOSHLASH UCHUN</span><h2>Readora tayyor</h2></div><span class="stage-chip">1-bosqich · Arxitektura</span></div><div class="foundation-card"><div class="foundation-icon">✦</div><div><h3>Asosiy loyiha poydevori yaratildi</h3><p>Keyingi bosqichlarda katalog, qidiruv, o'qish, profil va boshqa modullar bosqichma-bosqich qo'shiladi. Hozirgi fayllar keyingi funksiyalar uchun tuzilgan.</p></div></div>
+      </section>
+    </main>
+  </div>
+  <footer class="readora-footer"><div><strong>readora</strong><p>Kitoblar, bilim va yangi g‘oyalar.</p></div><nav><a href="#home" data-route="home">Bosh sahifa</a><a href="#books" data-route="books">Katalog</a><a href="#library" data-route="library">Kutubxonam</a><a href="#settings" data-route="settings">Sozlamalar</a></nav><small>© 2026 Readora · Demo library</small></footer><nav class="mobile-bottom-nav" aria-label="Mobil navigatsiya"><button data-route="home">⌂<span>Home</span></button><button data-route="books">▤<span>Kitoblar</span></button><button data-route="library">▣<span>Library</span></button><button data-route="profile">♙<span>Profil</span></button></nav>
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <script type="module" src="src/js/app.js"></script>
+</body>
+</html>
